@@ -1,0 +1,4 @@
+esptool==5.4.0
+pyserial==3.5
+matplotlib>=3.7
+numpy>=1.24
