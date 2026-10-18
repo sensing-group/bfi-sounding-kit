@@ -30,12 +30,38 @@ a network.
   2.4 GHz.
 
 ## Setup
-
+- Create the virtual environment
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r logger/requirements.txt
-.venv/bin/python -m esptool --chip esp32c5 write-flash 0x0 \
-    firmware/bin/2026-10-08_bfi-probe_esp32c5.bin
+```
+
+Activate the virtual environment once for your shell, then run the kit commands using plain `python`.
+
+- Activate the venv
+
+  - Linux / macOS (bash, zsh):
+    ```bash
+    source .venv/bin/activate
+    ```
+
+  - Windows (cmd.exe):
+    ```
+    .venv\Scripts\activate.bat
+    ```
+
+  - Windows (PowerShell):
+    ```
+    . .venv\Scripts\Activate.ps1
+    ```
+
+- Install the requirements 
+```bash
+python -m pip install -r logger/requirements.txt
+```
+
+- Flash the device with the firmware
+```bash
+python -m esptool --chip esp32c5 write-flash 0x0 firmware/bin/2026-10-08_bfi-probe_esp32c5.bin
 ```
 
 Flashing takes about seven seconds. The board then appears as `/dev/ttyACM0`
@@ -52,20 +78,25 @@ on Linux, `/dev/cu.usbmodem…` on macOS and `COM3` or similar on Windows; pass
 > ```
 
 ## The exercise
+- ⚠️ Important: if the board is on a nonstandard serial port, add `--port <PORT>` to commands that accept it (or to `esptool` when flashing). Example ports: POSIX `/dev/ttyACM0` or `/dev/cu.usbmodem…`, Windows `COM3`. Using the wrong port can talk to the wrong device — double-check before flashing.
 
-The exercise sheet is handed out in the course. It uses these commands:
+- Run the kit commands (after activation)
 
-```bash
-.venv/bin/python kit/scan.py                        # networks in range
-.venv/bin/python kit/scan.py --profile "MyWiFi"     # what the router says about itself
-.venv/bin/python kit/record.py --network "MyWiFi" --task check --id <ID>
-.venv/bin/python kit/summary.py data/<ID>_check.txt
-.venv/bin/python kit/blocks.py --id <ID>            # the stopwatch for the experiment
-.venv/bin/python kit/motion.py data/<ID>_experiment.txt --blocks data/<ID>_blocks.csv \
-                                --device <address>
-.venv/bin/python kit/anonymise.py data/* --labels labels.csv
-.venv/bin/python kit/check.py --id <ID>             # before submitting
-```
+  ```bash
+  python kit/scan.py                        # networks in range
+  python kit/scan.py --profile "MyWiFi"     # what the router says about itself
+  python kit/record.py --network "MyWiFi" --task check --id <ID>
+  # Example with explicit port (POSIX):
+  # python kit/record.py --network "MyWiFi" --task check --id <ID> --port /dev/ttyACM0
+  # Example with explicit port (Windows):
+  # python kit/record.py --network "MyWiFi" --task check --id <ID> --port COM3
+
+  python kit/summary.py data/<ID>_check.txt
+  python kit/blocks.py --id <ID>            # the stopwatch for the experiment
+  python kit/motion.py data/<ID>_experiment.txt --blocks data/<ID>_blocks.csv \
+                                  --device <address>
+  python kit/anonymise.py data/* --labels labels.csv
+  python kit/check.py --id <ID>             # before submitting
 
 `--task` is one of `check`, `baseline`, `experiment`, `outside1`, `outside2`,
 and `experiment2` for an optional repeat. It sets the recording length and the
