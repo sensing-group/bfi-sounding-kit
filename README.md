@@ -62,7 +62,7 @@ The exercise sheet is handed out in the course. It uses these commands:
 .venv/bin/python kit/summary.py data/<ID>_check.txt
 .venv/bin/python kit/blocks.py --id <ID>            # the stopwatch for the experiment
 .venv/bin/python kit/motion.py data/<ID>_experiment.txt --blocks data/<ID>_blocks.csv \
-                               --device <address>
+                                --device <address>
 .venv/bin/python kit/anonymise.py data/* --labels labels.csv
 .venv/bin/python kit/check.py --id <ID>             # before submitting
 ```
@@ -72,6 +72,22 @@ and `experiment2` for an optional repeat. It sets the recording length and the
 file name, so every submission in the course has the same structure. For the
 experiments, `--block-minutes 8` lengthens the recording to fit eight-minute
 blocks.
+
+### What `kit/motion.py` does
+
+`kit/motion.py` reads the recorded beamforming reports and measures how much the
+radio path changed over time. It decodes each reply from the board's raw angle
+values, compares each answer with a later answer from the same device (by default
+10 seconds later), and reports the mean change in "steps" of the device's own
+scale. A quiet room gives a small value; motion in the room gives a larger one.
+The script can also group those measurements into the time blocks from
+`kit/blocks.py`, print a per-block summary, and write two PNG plots next to the
+recording: a bar chart by block and a full timeline of the session.
+
+`--device` selects which responder to analyse by its MAC address, for example
+`aa:bb:cc:dd:ee:ff:11`. If you omit it, the script picks the device that sent the
+most answers in that recording. This is useful when several devices are visible,
+but you want to focus on the one you chose in the experiment.
 
 Once the router's address is known, only that network is recorded: sounding
 frames of neighbouring networks on the same channel are left out, by the
@@ -87,7 +103,7 @@ frames.
 | nothing at all | too far away, or wrong band | move the board closer, use the 5 GHz entry |
 | reports but no requests | router sends requests in a format the board cannot decode | normal, continue, state it in your report |
 | requests but no reports | devices reply in a format the board cannot decode | normal, continue, state it |
-| `record.py` or `check.py` says the board crashed and restarted | the computer power-cycled the USB port | unplug and replug the board, record again; turn off USB power saving (Windows: "USB selective suspend"; macOS: keep the laptop awake) |
+| `record.py` or `check.py` says the board crashed and restarted | the computer power-cycled the USB port | unplug and replug the board, record again; turn off USB power saving (Windows: "USB sele[...]
 | `scan.py --profile` finds no announcement of your network | neighbouring networks used up the capture budget | run it again |
 | values change for no apparent reason | something else in the room changed | note it in the home sheet and repeat the block |
 | `motion.py` reports too few pairs | your router sounds slowly | use `--lag 30`, or record for longer |
