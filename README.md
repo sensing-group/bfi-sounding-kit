@@ -104,6 +104,16 @@ file name, so every submission in the course has the same structure. For the
 experiments, `--block-minutes 8` lengthens the recording to fit eight-minute
 blocks.
 
+
+### Ways to generate heavy Wi‑Fi load (for the last block in the first experiment):
+
+- Direct download (delete the file afterward): click to download a large test file
+  - For example, Ububtu iso: https://releases.ubuntu.com/14.04.6/ubuntu-14.04.6-desktop-amd64.iso
+
+- Stream a 4K video (phone or laptop): open a 4K YouTube stream and set the quality to 2160p.
+  - Example: https://www.youtube.com/watch?v=UEQSkaqrMZA
+
+
 ### What `kit/motion.py` does
 
 `kit/motion.py` reads the recorded beamforming reports and measures how much the
